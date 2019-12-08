@@ -9,54 +9,63 @@
 #include <cstring>
 #include <cstdint>
 
-int ScanData::procBuffer(const char* const buffer)
+int ScanData::fillSpData2D()
 {
-    FileMap fm;
+    m_spdf.complex = m_fm.h->dtype & 0x10;
+    m_spdf.t = NumType(m_fm.h->dtype & 0x0f);
+    m_spdf.num = m_fm.h->dim1*m_fm.h->dim2*m_fm.h->dim3*m_fm.h->dim4*m_fm.h->dim5;
+    m_spdf.bytes = m_spdf.num * numTypeSizes[m_spdf.t] * (m_spdf.complex ? 2 : 1);
+    m_spdf.d = reinterpret_cast<decltype(m_spdf.d)>(m_fm.spData);
+    m_spdf.dim1 = m_fm.h->dim1;
+    m_spdf.dim2 = m_fm.h->dim2;
+    if (!m_spdf.complex || m_spdf.t != 5)
+    {
+        cerr << "Currently only complex float datatype is supported!" << endl;
+        return -1;
+    }
+    if (m_fm.h->dim3 > 1 || m_fm.h->dim4 > 4 || m_fm.h->dim5 > 5)
+    {
+        cerr << "Currently only 2D arrays are supported!" << endl;
+        return -1;
+    }
+    return 0;
+}
+
+int ScanData::procBuffer(const char* const aBuffer)
+{
+    
     size_t p = 0;
-    fm.h = reinterpret_cast<const Header*>(buffer);
+    m_fm.h = reinterpret_cast<const Header*>(aBuffer);
 
     p += 256;
     
-    fm.textData = buffer + p;
-    p += 256; // Unused text data omitted.
+    m_fm.textData = aBuffer + p;
 
-    DLOG << "d1: " << fm.h->dim1 << endl;
-    DLOG << "d2: " << fm.h->dim2 << endl;
-    DLOG << "d3: " << fm.h->dim3 << endl;
-    DLOG << "d4: " << fm.h->dim4 << endl;
-    DLOG << "d5: " << fm.h->dim5 << endl;
-    DLOG << "dtype: " << fm.h->dtype << endl;
+    p += 256; 
 
+    DLOG << "d1: " << m_fm.h->dim1 << endl;
+    DLOG << "d2: " << m_fm.h->dim2 << endl;
+    DLOG << "d3: " << m_fm.h->dim3 << endl;
+    DLOG << "d4: " << m_fm.h->dim4 << endl;
+    DLOG << "d5: " << m_fm.h->dim5 << endl;
+    DLOG << "dtype: " << m_fm.h->dtype << endl;
 
-    bool complex = fm.h->dtype & 0x10;
-    int numtype = fm.h->dtype & 0x0f;
-
-    SpData d;
-    d.complex = complex;
-    d.t = NumType(numtype);
-    d.num = fm.h->dim1*fm.h->dim2*fm.h->dim3*fm.h->dim4*fm.h->dim5;
-    d.bytes = d.num * numTypeSizes[numtype] * (d.complex ? 2 : 1);
-    d.d = reinterpret_cast<const float*>(buffer + p);
+    m_fm.spData = aBuffer + p;
     
-    p += d.bytes;
+    fillSpData2D();
+    
+    p += m_spdf.bytes;
 
-    DLOG << "complex: " << d.complex << " numtype: " << d.t << " num: " << d.num << " bytes " << d.bytes << endl;
+    DLOG << "complex: " << m_spdf.complex << " numtype: " << m_spdf.t << " num: " << m_spdf.num << " bytes " << m_spdf.bytes << endl;
 
     size_t sampleFileNameLength = 120;
-    fm.sampleFileName = buffer + p;
-    DLOG << fm.sampleFileName << endl;
+    m_fm.sampleFileName = aBuffer + p;
+    DLOG << m_fm.sampleFileName << endl;
 
     p += sampleFileNameLength;
 
-    fm.parameters = buffer + p;
+    m_fm.parameters = aBuffer + p;
 
-    DLOG << "parameters: " << fm.parameters << endl;
-
-    if (!complex || numtype != 5)
-    {
-        cerr << "Currently only complex float datatype is supported!" << endl;
-        exit(0);
-    }
-
+    // DLOG << "parameters: " << m_fm.parameters << endl;
     return 0;
 }

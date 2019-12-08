@@ -51,12 +51,13 @@ int main(int argc, const char *argv[])
     const string inputFileName(argv[1]);
     
     char* buffer;
-    FileIO fio;
-    fio.readFileToBuffer(inputFileName, buffer);
+    FileIO fio(inputFileName);  
+    fio.openFile();
+    fio.readFileToBuffer(buffer);
 
     ScanData scand;
     scand.procBuffer(buffer);
-    DLOG << buffer;
 
+    delete[] buffer;
     return 0;
 }

@@ -13,6 +13,10 @@ using namespace std;
 class ScanData
 {
     public:
+
+    int procBuffer(const char* const buffer);
+
+    private:
     #pragma pack(push, 1)
     struct Header
     {
@@ -50,18 +54,22 @@ class ScanData
 
     int numTypeSizes[7]{1,1,2,2,4,4,8};
 
-    struct SpData
+    template <typename T> struct SpData2D
     {
-        const float* d;
+        T const* d;
         size_t bytes;
         size_t num;
         NumType t;
         bool complex;
+        int32_t dim1;
+        int32_t dim2;
     };
 
-
-    int procBuffer(const char* const buffer);
-
+    int fillSpData2D();
+    
+    SpData2D<float> m_spdf;
+    FileMap m_fm;
+    //const char* const m_Buffer;
 };
 
 #endif

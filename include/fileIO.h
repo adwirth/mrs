@@ -14,8 +14,19 @@ namespace fs = experimental::filesystem;
 class FileIO
 {
     public:
-    int openFile(const string& fileName, ifstream& f);
-    int readFileToBuffer(const string& fileName, char*& buffer);
+
+    FileIO(const string& aFileName);
+    int readFileToBuffer(char*& aBuffer);
+    int openFile();
+    
+    private:
+
+    int getFileSize();
+    
+    size_t          m_fileSize;
+    const string&   m_fileName;
+    std::ifstream   m_in;
+    
 };
 
 #endif

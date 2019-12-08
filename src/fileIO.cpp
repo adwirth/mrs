@@ -8,50 +8,51 @@
 #include <cstring>
 #include <cstdint>
 
-
-int FileIO::openFile(const string& fileName, ifstream& f) 
+FileIO::FileIO(const string& aFileName):
+    m_fileName(aFileName)
 {
+       
+}
 
+int FileIO::openFile() 
+{
     /*
         inline bool exists_test3 (const std::string& name) {
         struct stat buffer;   
         return (stat (name.c_str(), &buffer) == 0); 
         }
     */
-    f = ifstream(fileName.c_str());
-    if (!f.good())
-    {
-        return -1;
-    }
-    f.open(fileName, ios::binary);
+    getFileSize();
+
+    m_in = ifstream();
+    m_in.open(m_fileName, ifstream::binary);
+    DLOG << m_fileName <<endl;
     return 0;
 }
 
-int FileIO::readFileToBuffer(const string& fileName, char*& buffer) 
+int FileIO::getFileSize()
 {
-    std::ifstream in(fileName, std::ifstream::ate | std::ifstream::binary);
-    size_t fileSize = in.tellg(); 
-    buffer = new char[fileSize];
+    std::ifstream f(m_fileName, std::ifstream::ate | std::ifstream::binary);
+    m_fileSize = static_cast<size_t>(f.tellg());
+    f.close();
+    return 0;
+}
 
-    DLOG << "File size: " << fileSize << endl;
-    
-    ifstream f;
-//    openFile(fileName, f);
-    if (!f.good())
+int FileIO::readFileToBuffer(char*& aBuffer) 
+{
+    DLOG <<  "m_fileSize: " << (size_t)m_fileSize << endl;
+    aBuffer = new char[m_fileSize];
+
+    m_in.read(aBuffer, m_fileSize);
+    if (!m_in)
     {
+        std::cerr << "Error: only " << m_in.gcount() << " could be read!" << endl;
+        m_in.close();
+        delete[] aBuffer;
         return -1;
     }
-    f.open(fileName, ios::binary);
-    f.read(buffer, fileSize);    
-    f.close();    
 
-    DLOG << "buffer: " <<  *reinterpret_cast<const int8_t*>(buffer+3) << " " <<  *reinterpret_cast<const int8_t*>(buffer+1) << endl;
-    // try 
-    // {
-        
-    // } catch(fs::filesystem_error& e) 
-    // {
-    //     std::cout << e.what() << endl;
-    // }   
+    m_in.close();
+
     return 0;
 }
