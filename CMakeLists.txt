@@ -3,8 +3,19 @@ include(CheckSymbolExists)
 
 project( mrproc LANGUAGES CXX )
 set (CMAKE_CXX_STANDARD 17)
+
+include_directories("include")
+
+set( SOURCES
+    include/fileIO.h
+    include/scanData.h
+    src/fileIO.cpp
+    src/mrproc.cpp  
+    src/scanData.cpp
+)
+
 add_executable( mrproc
-    src/mrproc.cpp
+    ${SOURCES}
 )
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
