@@ -1,6 +1,7 @@
 #include "scanData.h"
 #include "fileIO.h"
 #include "dlog.h"
+#include "fftScan.h"
 
 #include <iostream>
 #include <fstream>

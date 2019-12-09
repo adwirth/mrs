@@ -1,6 +1,7 @@
 #include "dlog.h"
 #include "scanData.h"
 #include "fileIO.h"
+#include "fftScan.h"
 
 #include <iostream>
 #include <fstream>
@@ -8,7 +9,6 @@
 #include <string>
 #include <cstring>
 #include <cstdint>
-
 
 
 // parse parameters
@@ -58,6 +58,8 @@ int main(int argc, const char *argv[])
     ScanData scand;
     scand.procBuffer(buffer);
 
+    FFTScan::calcMagnitude(scand.m_spdf.d, scand.m_spdf.num);
+    FFTScan::performFFT(scand.m_spdf.d, scand.m_spdf.dim1, scand.m_spdf.dim2);
     delete[] buffer;
     return 0;
 }

@@ -13,34 +13,6 @@ using namespace std;
 class ScanData
 {
     public:
-
-    int procBuffer(const char* const buffer);
-
-    private:
-    #pragma pack(push, 1)
-    struct Header
-    {
-        int32_t dim1;
-        int32_t dim2;
-        int32_t dim3;
-        int32_t dim4;
-        char    _unspec1[0x11-0xF];
-        int16_t dtype;
-        char    _unspec2[0x98-0x14];
-        int32_t dim5;
-        int32_t dim6;
-    };
-    #pragma pack(pop)
-
-    struct FileMap
-    {
-        const Header* h;
-        const char* textData;
-        const char* spData;
-        const char* sampleFileName;
-        const char* parameters;
-    };
-
     enum NumType
     {
         UCHAR,
@@ -65,9 +37,40 @@ class ScanData
         int32_t dim2;
     };
 
+    int procBuffer(const char* const buffer);
+    SpData2D<float> m_spdf;
+
+    private:
+    
+    #pragma pack(push, 1)
+    struct Header
+    {
+        int32_t dim1;
+        int32_t dim2;
+        int32_t dim3;
+        int32_t dim4;
+        char    _unspec1[0x11-0xF];
+        int16_t dtype;
+        char    _unspec2[0x98-0x14];
+        int32_t dim5;
+        int32_t dim6;
+    };
+    #pragma pack(pop)
+
+    struct FileMap
+    {
+        const Header* h;
+        const char* textData;
+        const char* spData;
+        const char* sampleFileName;
+        const char* parameters;
+    };
+
+
+
     int fillSpData2D();
     
-    SpData2D<float> m_spdf;
+    
     FileMap m_fm;
     //const char* const m_Buffer;
 };
