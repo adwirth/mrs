@@ -14,18 +14,12 @@ FileIO::FileIO(const string& aFileName):
        
 }
 
-int FileIO::openFile() 
+int FileIO::openInputFile() 
 {
-    /*
-        inline bool exists_test3 (const std::string& name) {
-        struct stat buffer;   
-        return (stat (name.c_str(), &buffer) == 0); 
-        }
-    */
     getFileSize();
 
-    m_in = ifstream();
-    m_in.open(m_fileName, ifstream::binary);
+    m_fstream = ifstream();
+    m_fstream.open(m_fileName, ifstream::binary);
     DLOG << m_fileName <<endl;
     return 0;
 }
@@ -43,16 +37,32 @@ int FileIO::readFileToBuffer(char*& aBuffer)
     DLOG <<  "m_fileSize: " << (size_t)m_fileSize << endl;
     aBuffer = new char[m_fileSize];
 
-    m_in.read(aBuffer, m_fileSize);
-    if (!m_in)
+    m_fstream.read(aBuffer, m_fileSize);
+    if (!m_fstream)
     {
-        std::cerr << "Error: only " << m_in.gcount() << " could be read!" << endl;
-        m_in.close();
+        std::cerr << "Error: only " << m_fstream.gcount() << " could be read!" << endl;
+        m_fstream.close();
         delete[] aBuffer;
         return -1;
     }
 
-    m_in.close();
+    m_fstream.close();
 
+    return 0;
+}
+
+int FileIO::openOutputFile() 
+{
+    m_outstream = ofstream();
+    m_outstream.open(m_fileName, ofstream::binary);
+
+    return 0;
+}
+
+
+int FileIO::rawDump(const char* aBuffer, size_t aBufferSize)
+{
+    m_outstream.write(aBuffer, aBufferSize);
+    m_outstream.close();
     return 0;
 }

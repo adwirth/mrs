@@ -17,7 +17,9 @@ class FileIO
 
     FileIO(const string& aFileName);
     int readFileToBuffer(char*& aBuffer);
-    int openFile();
+    int openInputFile();
+    int openOutputFile();
+    int rawDump(const char* aBuffer, size_t aBufferSize);
     
     private:
 
@@ -25,7 +27,8 @@ class FileIO
     
     size_t          m_fileSize;
     const string&   m_fileName;
-    std::ifstream   m_in;
+    std::ifstream   m_fstream;
+    std::ofstream   m_outstream;
     
 };
 

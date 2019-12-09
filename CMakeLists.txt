@@ -15,6 +15,7 @@ set( SOURCES
     src/fileIO.cpp
     src/mrproc.cpp  
     src/scanData.cpp
+    src/fftScan.cpp
 )
 
 add_executable( mrproc
