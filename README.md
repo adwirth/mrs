@@ -1,4 +1,23 @@
-# mrs
+# Requirements
+
+* FFTW3 built with single precision float support
+* CMake
+
+# Build
+
+```
+mkdir build
+cd build
+cmake ../
+make
+```
+
+# Example
+```
+./mrproc ../data/45_0.mrd --scanmag inpmag.raw --scanphase inpphase.raw --outmag outmagn.raw --outphase outphase.raw
+```
+
+# Task Description
 1.	Task: reconstruct and present image of an object read-in from the raw spectrometer data file
 
 Description: The raw spectrometer data file is provided in the MRD format. The data is of a single-slice MRI scan acquired in transverse orientation on a water-filled tube placed in the scanner. The file contains a sequence of complex numbers  (‘Data’, or ‘data proper’) representing 2D data known as ‘k-space’ in MRI. The dimensions of the ‘Data’ are contained in the header of the file. The principal operation is to convert the ‘k-space’ data into ‘image-space’ data (or simply ‘image’) by means of Fourier transformation (e.g. FFT or DFT). The following steps are necessary to achieve that:

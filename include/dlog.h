@@ -14,7 +14,7 @@ struct X {
 
 #define DLOG \
     if (debug_disabled) {} \
-    else std::cerr
+    else std::cerr << "  [Dbug] "
 
 using namespace std;
 

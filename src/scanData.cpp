@@ -1,14 +1,8 @@
 #include "scanData.h"
 #include "fileIO.h"
 #include "dlog.h"
-#include "fftScan.h"
 
 #include <iostream>
-#include <fstream>
-#include <experimental/filesystem>
-#include <string>
-#include <cstring>
-#include <cstdint>
 
 int ScanData::fillSpData2D()
 {
@@ -33,8 +27,7 @@ int ScanData::fillSpData2D()
 }
 
 int ScanData::procBuffer(const char* const aBuffer)
-{
-    
+{    
     size_t p = 0;
     m_fm.h = reinterpret_cast<const Header*>(aBuffer);
 
@@ -67,6 +60,5 @@ int ScanData::procBuffer(const char* const aBuffer)
 
     m_fm.parameters = aBuffer + p;
 
-    // DLOG << "parameters: " << m_fm.parameters << endl;
     return 0;
 }

@@ -2,17 +2,22 @@
 #define SCANDATA_H
 
 #include <iostream>
-#include <fstream>
-#include <experimental/filesystem>
-#include <string>
-#include <cstring>
-#include <cstdint>
 
 using namespace std;
 
+
+/**
+ * ScanData
+ * 
+ * This class manages the read raw data and performs mappings.
+ */
 class ScanData
 {
     public:
+
+    /**
+     * Enum for representing the different possible types of scan data.
+     */
     enum NumType
     {
         UCHAR,
@@ -24,8 +29,11 @@ class ScanData
         DOUBLE
     };
 
-    int numTypeSizes[7]{1,1,2,2,4,4,8};
+    int numTypeSizes[7]{1,1,2,2,4,4,8};         //!< Sizes of the datatypes
 
+    /**
+     * Template struct for representing 2D spectrometer data of various types
+     */
     template <typename T> struct SpData2D
     {
         T const* d;
@@ -37,11 +45,18 @@ class ScanData
         int32_t dim2;
     };
 
+    /**
+     * Process file buffer and maps to FileMap
+     */
     int procBuffer(const char* const buffer);
-    SpData2D<float> m_spdf;
+
+    SpData2D<float> m_spdf;                             //!< 2D spectrometer data
 
     private:
     
+    /**
+     * Packed struct for mapping file header
+     */
     #pragma pack(push, 1)
     struct Header
     {
@@ -57,6 +72,9 @@ class ScanData
     };
     #pragma pack(pop)
 
+    /**
+     * Struct for mapping the whole file content
+     */
     struct FileMap
     {
         const Header* h;
@@ -66,13 +84,11 @@ class ScanData
         const char* parameters;
     };
 
-
-
-    int fillSpData2D();
-    
-    
-    FileMap m_fm;
-    //const char* const m_Buffer;
+    /**
+     * Fills spectroscopy data
+     */
+    int fillSpData2D();    
+    FileMap m_fm;                                   //!< File map struct
 };
 
 #endif
