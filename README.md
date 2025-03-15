@@ -18,35 +18,27 @@ make
 ```
 
 # Task Description
-1.	Task: reconstruct and present image of an object read-in from the raw spectrometer data file
+Task: reconstruct and present image of an object read-in from the raw spectrometer data file
 
 Description: The raw spectrometer data file is provided in the MRD format. The data is of a single-slice MRI scan acquired in transverse orientation on a water-filled tube placed in the scanner. The file contains a sequence of complex numbers  (‘Data’, or ‘data proper’) representing 2D data known as ‘k-space’ in MRI. The dimensions of the ‘Data’ are contained in the header of the file. The principal operation is to convert the ‘k-space’ data into ‘image-space’ data (or simply ‘image’) by means of Fourier transformation (e.g. FFT or DFT). The following steps are necessary to achieve that:
-2.	
-3.	1) Read in the provided raw spectrometer data file in the MRD format (see format specification below) and form a 2D array (‘k-space’) of the dimensions X (‘Dimension 1’) by Y (‘Dimension 2’). Dimensions, as well as data type, should be read in from the header. The solution should be capable of reading and processing the MRD file of any ‘Dimension 1’ and ‘Dimension 2’.
-4.	
-5.	The highlighted locations are those of critical importance. Only two dimensions are greater than 1 in the provided MRD file, i.e. the file contains only one 2D k-space array from a single slice acquisition.
-6.	
-7.	Optional step: display the magnitude of the k-space graphically 
 
-8.	2) Perform 2D Fourier transform (FFT or DFT) of the ‘k-space’ data to obtain ‘image’. 
-9.	
-10.	It may be necessary to use the 2D ‘fftshift’ (MATLAB-syntax command) or equivalent before and after the FT to correctly represent the data, i.e. to un-swap the quadrants.
-11.	
-12.	3) Display separately the magnitude and the phase components of the ‘image’ graphically2
+Read in the provided raw spectrometer data file in the MRD format (see format specification below) and form a 2D array (‘k-space’) of the dimensions X (‘Dimension 1’) by Y (‘Dimension 2’). Dimensions, as well as data type, should be read in from the header. The solution should be capable of reading and processing the MRD file of any ‘Dimension 1’ and ‘Dimension 2’.
+
+The highlighted locations are those of critical importance. Only two dimensions are greater than 1 in the provided MRD file, i.e. the file contains only one 2D k-space array from a single slice acquisition.
+
+Optional step: display the magnitude of the k-space graphically 
+Perform 2D Fourier transform (FFT or DFT) of the ‘k-space’ data to obtain ‘image’. 
+It may be necessary to use the 2D ‘fftshift’ (MATLAB-syntax command) or equivalent before and after the FT to correctly represent the data, i.e. to un-swap the quadrants.
+Display separately the magnitude and the phase components of the ‘image’ graphically2
 The object (slice through the water-filled tube) should be clearly recognisable.
 
 Optional step: calculate the signal-to-noise ratio for the magnitude ‘image’
-
 
 It is advisable to use a publicly available FFT library such as FFTW or an alternative. 
 he task should be coded in C++. 
 
 
-
-13.	
-14.	
- 
-15.	Raw spectrometer data file format
+# Raw spectrometer data file format
 
 Spectral data is stored in a file with an extension .MRD.  The file format consists of:
 
